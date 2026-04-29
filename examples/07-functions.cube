@@ -2,5 +2,5 @@ mine greet(name) {
   return "Hello, " + name;
 }
 
-let msg = greet("Steve");
+place msg = greet("Steve");
 msg;

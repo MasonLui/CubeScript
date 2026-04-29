@@ -7,5 +7,5 @@ mine is_daytime(hour) {
   return false;
 }
 
-let daytime = is_daytime(12);
+place daytime = is_daytime(12);
 daytime;

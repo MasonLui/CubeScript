@@ -7,10 +7,10 @@ mine craft_sticks(plank_count) {
 }
 
 mine can_craft_pickaxe(logs) {
-  let planks = craft_planks(logs);
-  let sticks = craft_sticks(planks);
+  place planks = craft_planks(logs);
+  place sticks = craft_sticks(planks);
   return planks >= 3 && sticks >= 2;
 }
 
-let enough = can_craft_pickaxe(2);
+place enough = can_craft_pickaxe(2);
 enough;

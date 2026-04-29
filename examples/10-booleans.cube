@@ -1,4 +1,4 @@
-let has_sword = true;
-let has_shield = false;
-let is_ready = has_sword && !has_shield;
+place has_sword = true;
+place has_shield = false;
+place is_ready = has_sword && !has_shield;
 is_ready;
