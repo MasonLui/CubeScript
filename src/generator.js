@@ -57,6 +57,8 @@ function genStmt(stmt, indent = '') {
       return stmt.value ? `${i}return ${genExpr(stmt.value)};` : `${i}return;`;
     case 'Break':
       return `${i}break;`;
+    case 'Continue':
+      return `${i}continue;`;
     default:
       throw new Error(`Cannot generate code for statement kind: ${stmt.kind}`);
   }

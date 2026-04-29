@@ -70,8 +70,9 @@ A thin companion Sponge plugin loads the compiled `.cube` output using GraalVM's
 | Duplicate bindings in the same scope | Implemented |
 | Undefined function names | Implemented |
 | `return` outside a function | Implemented |
-| `break` outside a loop | Implemented |
-| Type checking | **Not yet implemented** |
+| `break` / `continue` outside a loop | Implemented |
+| Constant folding (arithmetic, comparisons, booleans) | Implemented |
+| Type checking (arithmetic, comparisons, logical, assignment) | Implemented |
 
 **Security note:** the CLI `run` command uses `eval` only as a teaching shortcut. The production path is `generate` → embed output in the Sponge GraalVM host.
 
@@ -79,7 +80,7 @@ A thin companion Sponge plugin loads the compiled `.cube` output using GraalVM's
 
 1. **Install Node 18+** (LTS is fine).
 2. In this directory run **`npm install`**.
-3. Run **`npm test`** — all 109 tests should pass with ≥ 99% coverage.
+3. Run **`npm test`** — all 139 tests should pass with 100% branch coverage.
 4. Try the CLI:
    ```bash
    node src/cubescript.js run examples/12-mod-recipe.cube
@@ -150,7 +151,7 @@ Ohm spec: [`src/cubescript.ohm`](src/cubescript.ohm)
 npm test
 ```
 
-Uses `c8` over Node's built-in test runner. **109 tests, all passing, 100% branch coverage.**
+Uses `c8` over Node's built-in test runner. **139 tests, all passing, 100% branch coverage.**
 
 ## License
 

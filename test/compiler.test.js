@@ -189,6 +189,16 @@ test('CLI analyze rejects return outside function', () => {
   unlinkSync(f);
 });
 
+test('CLI analyze rejects continue outside loop', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
+  const f = join(dir, 't.cube');
+  writeFileSync(f, 'continue;');
+  const r = runCli(['analyze', f]);
+  assert.strictEqual(r.status, 1);
+  assert.ok(r.stderr.includes('Continue'));
+  unlinkSync(f);
+});
+
 test('CLI analyze rejects break outside loop', () => {
   const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
   const f = join(dir, 't.cube');

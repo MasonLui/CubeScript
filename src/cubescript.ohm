@@ -6,6 +6,7 @@ Cubescript {
        | WhileStmt
        | ReturnStmt
        | BreakStmt
+       | ContinueStmt
        | LetStmt
        | AssignStmt
        | ExprStmt
@@ -16,8 +17,9 @@ Cubescript {
 
   IfStmt    = ifKeyword "(" Expr ")" Block (elseKeyword Block)?
   WhileStmt = whileKeyword "(" Expr ")" Block
-  ReturnStmt = returnKeyword Expr? ";"
-  BreakStmt  = breakKeyword ";"
+  ReturnStmt    = returnKeyword Expr? ";"
+  BreakStmt     = breakKeyword ";"
+  ContinueStmt  = continueKeyword ";"
 
   LetStmt    = letKeyword id "=" Expr ";"
   AssignStmt = id "=" Expr ";"
@@ -57,18 +59,19 @@ Cubescript {
   stringChar = ~("\"" | "\n") any
   number    = digit+
 
-  letKeyword    = "let"    ~idChar
-  mineKeyword   = "mine"   ~idChar
-  ifKeyword     = "if"     ~idChar
-  elseKeyword   = "else"   ~idChar
-  whileKeyword  = "while"  ~idChar
-  returnKeyword = "return" ~idChar
-  breakKeyword  = "break"  ~idChar
-  trueKeyword   = "true"   ~idChar
-  falseKeyword  = "false"  ~idChar
+  letKeyword      = "let"      ~idChar
+  mineKeyword     = "mine"     ~idChar
+  ifKeyword       = "if"       ~idChar
+  elseKeyword     = "else"     ~idChar
+  whileKeyword    = "while"    ~idChar
+  returnKeyword   = "return"   ~idChar
+  breakKeyword    = "break"    ~idChar
+  continueKeyword = "continue" ~idChar
+  trueKeyword     = "true"     ~idChar
+  falseKeyword    = "false"    ~idChar
 
   keyword = letKeyword | mineKeyword | ifKeyword | elseKeyword
-          | whileKeyword | returnKeyword | breakKeyword
+          | whileKeyword | returnKeyword | breakKeyword | continueKeyword
           | trueKeyword | falseKeyword
 
   id      = ~keyword (letter | "_") idChar*

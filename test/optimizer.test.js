@@ -247,9 +247,19 @@ test('optimize Return with null value stays null', () => {
   assert.strictEqual(optimize(ast).statements[0].value, null);
 });
 
-test('optimize passes through unknown statement kinds', () => {
+test('optimize passes through Break', () => {
   const ast = { kind: 'Program', statements: [{ kind: 'Break' }] };
   assert.strictEqual(optimize(ast).statements[0].kind, 'Break');
+});
+
+test('optimize passes through Continue', () => {
+  const ast = { kind: 'Program', statements: [{ kind: 'Continue' }] };
+  assert.strictEqual(optimize(ast).statements[0].kind, 'Continue');
+});
+
+test('optimize passes through unknown statement kinds', () => {
+  const ast = { kind: 'Program', statements: [{ kind: 'FutureStmt' }] };
+  assert.strictEqual(optimize(ast).statements[0].kind, 'FutureStmt');
 });
 
 test('optimize sets optimized flag', () => {

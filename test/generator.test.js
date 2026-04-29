@@ -129,6 +129,18 @@ test('generate emits while loop', () => {
   assert.ok(code.includes('break;'));
 });
 
+test('generate emits continue', () => {
+  const ast = {
+    kind: 'Program',
+    statements: [{
+      kind: 'While',
+      cond: { kind: 'Boolean', value: true },
+      body: [{ kind: 'Continue' }],
+    }],
+  };
+  assert.ok(generate(ast).includes('continue;'));
+});
+
 test('generate emits return with value', () => {
   const ast = {
     kind: 'Program',

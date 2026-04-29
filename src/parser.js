@@ -65,6 +65,9 @@ function buildSemantics(g) {
     BreakStmt(_break, _semi) {
       return { kind: 'Break' };
     },
+    ContinueStmt(_continue, _semi) {
+      return { kind: 'Continue' };
+    },
 
     // ── variable statements ───────────────────────────────────
     LetStmt(_let, idNode, _eq, expr, _semi) {
@@ -160,7 +163,8 @@ function buildSemantics(g) {
     elseKeyword(_x)   { return undefined; },
     whileKeyword(_x)  { return undefined; },
     returnKeyword(_x) { return undefined; },
-    breakKeyword(_x)  { return undefined; },
+    breakKeyword(_x)    { return undefined; },
+    continueKeyword(_x) { return undefined; },
     trueKeyword(_x)   { return undefined; },
     falseKeyword(_x)  { return undefined; },
   });

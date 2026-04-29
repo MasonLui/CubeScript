@@ -125,6 +125,11 @@ test('parse while loop', () => {
   assert.strictEqual(ast.statements[0].body[0].kind, 'Break');
 });
 
+test('parse continue statement', () => {
+  const ast = parse('while (true) { continue; }');
+  assert.strictEqual(ast.statements[0].body[0].kind, 'Continue');
+});
+
 test('parse return with value', () => {
   const ast = parse('mine f() { return 42; }');
   const ret = ast.statements[0].body[0];

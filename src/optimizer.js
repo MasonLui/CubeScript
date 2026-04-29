@@ -72,6 +72,9 @@ function optimizeStmt(stmt) {
       return { ...stmt, cond: foldExpr(stmt.cond), body: stmt.body.map(optimizeStmt) };
     case 'Return':
       return { ...stmt, value: stmt.value ? foldExpr(stmt.value) : null };
+    case 'Break':
+    case 'Continue':
+      return stmt;
     default:
       return stmt;
   }
