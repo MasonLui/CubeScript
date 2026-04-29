@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="docs/logo.svg" width="120" height="120" alt="Cubescript logo — grass block cube" />
+<img src="docs/logo.png" width="120" height="120" alt="Cubescript logo — grass block cube" />
 
 **Write logic for cube worlds — statically checked, Sponge-ready.**
 
