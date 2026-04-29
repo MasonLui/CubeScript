@@ -1,0 +1,26 @@
+Cubescript {
+  Prog = Stmt*
+
+  Stmt = LetStmt | ExprStmt
+  LetStmt = letKeyword id "=" Expr ";"
+  ExprStmt = Expr ";"
+
+  Expr = Expr "+" Term  -- plus
+       | Term
+  Term = Term "*" Factor  -- mul
+       | Factor
+  Factor = string
+         | number
+         | id
+         | FactorParen
+  FactorParen = "(" Expr ")"
+
+  string = "\"" stringChars "\""
+  stringChars = stringChar*
+  stringChar = ~("\"" | "\n") any
+
+  letKeyword = "let" ~idChar
+  id = (letter | "_") idChar*
+  idChar = letter | digit | "_"
+  number = digit+
+}

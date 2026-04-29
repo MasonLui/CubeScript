@@ -1,0 +1,3 @@
+let day_count = 10;
+let mobs_spawned = day_count + 1;
+mobs_spawned + mobs_spawned;

@@ -1,0 +1,2 @@
+let cobble_stacks = 1 + 2;
+let planks = cobble_stacks * 3;
