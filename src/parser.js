@@ -30,44 +30,118 @@ function buildSemantics(g) {
     Stmt(s) {
       return s.toAst();
     },
-    LetStmt(kw, idNode, _eq, expr, _semi) {
-      kw.toAst();
+
+    // ── declarations ──────────────────────────────────────────
+    FuncDecl(_mine, idNode, _lp, params, _rp, block) {
       return {
-        kind: 'Let',
+        kind: 'FuncDecl',
         name: idNode.sourceString,
-        init: expr.toAst(),
+        params: params.toAst(),
+        body: block.toAst(),
       };
+    },
+    Params(list) {
+      return list.asIteration().children.map((c) => c.sourceString);
+    },
+    Block(_lb, stmts, _rb) {
+      return stmts.toAst();
+    },
+
+    // ── control flow ──────────────────────────────────────────
+    IfStmt(_if, _lp, cond, _rp, thenBlock, elseKw, elseBlock) {
+      return {
+        kind: 'If',
+        cond: cond.toAst(),
+        then: thenBlock.toAst(),
+        else: elseBlock.children.length > 0 ? elseBlock.children[0].toAst() : null,
+      };
+    },
+    WhileStmt(_while, _lp, cond, _rp, body) {
+      return { kind: 'While', cond: cond.toAst(), body: body.toAst() };
+    },
+    ReturnStmt(_ret, expr, _semi) {
+      return { kind: 'Return', value: expr.children.length > 0 ? expr.children[0].toAst() : null };
+    },
+    BreakStmt(_break, _semi) {
+      return { kind: 'Break' };
+    },
+
+    // ── variable statements ───────────────────────────────────
+    LetStmt(_let, idNode, _eq, expr, _semi) {
+      return { kind: 'Let', name: idNode.sourceString, init: expr.toAst() };
+    },
+    AssignStmt(idNode, _eq, expr, _semi) {
+      return { kind: 'Assign', name: idNode.sourceString, value: expr.toAst() };
     },
     ExprStmt(expr, _semi) {
       return { kind: 'ExprStmt', expr: expr.toAst() };
     },
-    Expr(e) {
-      return e.toAst();
+
+    // ── expressions ───────────────────────────────────────────
+    Expr(e) { return e.toAst(); },
+    Expr_or(left, _op, right) {
+      return { kind: 'Binary', op: '||', left: left.toAst(), right: right.toAst() };
     },
-    Expr_plus(left, _plus, right) {
+    Expr2(e) { return e.toAst(); },
+    Expr2_and(left, _op, right) {
+      return { kind: 'Binary', op: '&&', left: left.toAst(), right: right.toAst() };
+    },
+    Expr3(e) { return e.toAst(); },
+    Expr3_eq(left, _op, right) {
+      return { kind: 'Binary', op: '===', left: left.toAst(), right: right.toAst() };
+    },
+    Expr3_ne(left, _op, right) {
+      return { kind: 'Binary', op: '!==', left: left.toAst(), right: right.toAst() };
+    },
+    Expr3_le(left, _op, right) {
+      return { kind: 'Binary', op: '<=', left: left.toAst(), right: right.toAst() };
+    },
+    Expr3_ge(left, _op, right) {
+      return { kind: 'Binary', op: '>=', left: left.toAst(), right: right.toAst() };
+    },
+    Expr3_lt(left, _op, right) {
+      return { kind: 'Binary', op: '<', left: left.toAst(), right: right.toAst() };
+    },
+    Expr3_gt(left, _op, right) {
+      return { kind: 'Binary', op: '>', left: left.toAst(), right: right.toAst() };
+    },
+    Expr4(e) { return e.toAst(); },
+    Expr4_plus(left, _op, right) {
       return { kind: 'Binary', op: '+', left: left.toAst(), right: right.toAst() };
     },
-    Term(t) {
-      return t.toAst();
+    Expr4_minus(left, _op, right) {
+      return { kind: 'Binary', op: '-', left: left.toAst(), right: right.toAst() };
     },
-    Term_mul(left, _star, right) {
+    Expr5(e) { return e.toAst(); },
+    Expr5_mul(left, _op, right) {
       return { kind: 'Binary', op: '*', left: left.toAst(), right: right.toAst() };
     },
-    Factor(f) {
-      return f.toAst();
+    Expr5_div(left, _op, right) {
+      return { kind: 'Binary', op: '/', left: left.toAst(), right: right.toAst() };
     },
-    FactorParen(_lp, expr, _rp) {
-      return expr.toAst();
+    Unary(u) { return u.toAst(); },
+    Unary_not(_bang, expr) {
+      return { kind: 'Unary', op: '!', expr: expr.toAst() };
+    },
+    Unary_neg(_minus, expr) {
+      return { kind: 'Unary', op: '-', expr: expr.toAst() };
+    },
+    Call(c) { return c.toAst(); },
+    Call_call(idNode, _lp, args, _rp) {
+      return { kind: 'Call', name: idNode.sourceString, args: args.toAst() };
+    },
+    Args(list) {
+      return list.asIteration().children.map((c) => c.toAst());
+    },
+    Primary(p) { return p.toAst(); },
+    Primary_paren(_lp, expr, _rp) { return expr.toAst(); },
+
+    // ── literals ──────────────────────────────────────────────
+    boolLit(node) {
+      return { kind: 'Boolean', value: node.sourceString === 'true' };
     },
     string(_open, chars, _close) {
-      const parts = chars.toAst();
-      return {
-        kind: 'String',
-        value: Array.isArray(parts) ? parts.join('') : '',
-      };
-    },
-    stringChars(chars) {
-      return chars.toAst();
+      return { kind: 'String', value: chars.children.map((c) => c.sourceString).join('') };
     },
     stringChar(_any) {
       return this.sourceString;
@@ -75,16 +149,20 @@ function buildSemantics(g) {
     number(_digits) {
       return { kind: 'Number', value: Number(this.sourceString) };
     },
-    id(_first, rest) {
-      rest.toAst();
+    id(_first, _rest) {
       return { kind: 'Id', name: this.sourceString };
     },
-    idChar(_c) {
-      return this.sourceString;
-    },
-    letKeyword(_x) {
-      return undefined;
-    },
+
+    // ── keywords (no AST value needed) ───────────────────────
+    letKeyword(_x)    { return undefined; },
+    mineKeyword(_x)   { return undefined; },
+    ifKeyword(_x)     { return undefined; },
+    elseKeyword(_x)   { return undefined; },
+    whileKeyword(_x)  { return undefined; },
+    returnKeyword(_x) { return undefined; },
+    breakKeyword(_x)  { return undefined; },
+    trueKeyword(_x)   { return undefined; },
+    falseKeyword(_x)  { return undefined; },
   });
 }
 

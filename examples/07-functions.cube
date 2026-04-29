@@ -1,0 +1,6 @@
+mine greet(name) {
+  return "Hello, " + name;
+}
+
+let msg = greet("Steve");
+msg;

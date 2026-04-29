@@ -1,0 +1,16 @@
+mine craft_planks(log_count) {
+  return log_count * 4;
+}
+
+mine craft_sticks(plank_count) {
+  return plank_count / 2;
+}
+
+mine can_craft_pickaxe(logs) {
+  let planks = craft_planks(logs);
+  let sticks = craft_sticks(planks);
+  return planks >= 3 && sticks >= 2;
+}
+
+let enough = can_craft_pickaxe(2);
+enough;

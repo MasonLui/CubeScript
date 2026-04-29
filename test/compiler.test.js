@@ -158,3 +158,65 @@ test('CLI reports missing file cleanly', () => {
   assert.strictEqual(r.status, 1);
   assert.ok(r.stderr.includes('File not found'));
 });
+
+test('CLI runs function example', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
+  const f = join(dir, 't.cube');
+  writeFileSync(f, 'mine double(n) { return n * 2; } let x = double(5); x;');
+  const r = runCli(['run', f]);
+  assert.strictEqual(r.status, 0, r.stderr);
+  assert.strictEqual(r.stdout.trim(), '10');
+  unlinkSync(f);
+});
+
+test('CLI runs if-else example', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
+  const f = join(dir, 't.cube');
+  writeFileSync(f, 'let x = 1; if (x > 0) { x = 99; } x;');
+  const r = runCli(['run', f]);
+  assert.strictEqual(r.status, 0, r.stderr);
+  assert.strictEqual(r.stdout.trim(), '99');
+  unlinkSync(f);
+});
+
+test('CLI analyze rejects return outside function', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
+  const f = join(dir, 't.cube');
+  writeFileSync(f, 'return 1;');
+  const r = runCli(['analyze', f]);
+  assert.strictEqual(r.status, 1);
+  assert.ok(r.stderr.includes('Return'));
+  unlinkSync(f);
+});
+
+test('CLI analyze rejects break outside loop', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
+  const f = join(dir, 't.cube');
+  writeFileSync(f, 'break;');
+  const r = runCli(['analyze', f]);
+  assert.strictEqual(r.status, 1);
+  assert.ok(r.stderr.includes('Break'));
+  unlinkSync(f);
+});
+
+test('CLI generate emits function JS', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
+  const f = join(dir, 't.cube');
+  writeFileSync(f, 'mine greet(name) { return "Hi " + name; }');
+  const r = runCli(['generate', f]);
+  assert.strictEqual(r.status, 0, r.stderr);
+  assert.ok(r.stdout.includes('function greet'));
+  unlinkSync(f);
+});
+
+test('compile full pipeline with new features', () => {
+  const { code, ast } = compile('mine f(x) { return x + 1; } let r = f(4); r;');
+  assert.ok(ast.optimized);
+  assert.ok(code.includes('function f'));
+  assert.ok(code.includes('return'));
+});
+
+test('CLI reports non-ENOENT read error', () => {
+  const r = runCli(['syntax', '/']);
+  assert.strictEqual(r.status, 1);
+});

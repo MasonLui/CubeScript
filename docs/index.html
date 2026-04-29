@@ -242,7 +242,7 @@
         <h1>Cubescript</h1>
         <p class="sub">Statically checked scripts for the Sponge mod ecosystem.</p>
         <div class="badges">
-          <span class="badge badge-green">39 tests passing</span>
+          <span class="badge badge-green">109 tests passing</span>
           <span class="badge badge-gold">Ohm grammar</span>
           <span class="badge badge-green">Sponge + GraalVM target</span>
           <span class="badge badge-gold">LMU CMSI 3802</span>
@@ -330,7 +330,71 @@ let mobs_spawned = day_count + 1;
 mobs_spawned + mobs_spawned;</code></pre>
         </div>
 
-        <p class="example-label">5 · Static error — undefined identifier</p>
+        <p class="example-label">5 · Function declaration &amp; call</p>
+        <div class="example-grid">
+          <div class="col-head">Cubescript</div>
+          <div class="col-head right">Generated JavaScript</div>
+          <pre><code>mine double(n) {
+  return n * 2;
+}
+let result = double(5);
+result;</code></pre>
+          <pre class="right"><code>function double(n) {
+  return (n * 2);
+}
+let result = double(5);
+result;</code></pre>
+        </div>
+
+        <p class="example-label">6 · If / else conditional</p>
+        <div class="example-grid">
+          <div class="col-head">Cubescript</div>
+          <div class="col-head right">Generated JavaScript</div>
+          <pre><code>mine is_day(hour) {
+  if (hour >= 6) {
+    return true;
+  } else {
+    return false;
+  }
+}</code></pre>
+          <pre class="right"><code>function is_day(hour) {
+  if ((hour >= 6)) {
+    return true;
+  } else {
+    return false;
+  }
+}</code></pre>
+        </div>
+
+        <p class="example-label">7 · While loop with break</p>
+        <div class="example-grid">
+          <div class="col-head">Cubescript</div>
+          <div class="col-head right">Generated JavaScript</div>
+          <pre><code>let i = 10;
+while (i > 0) {
+  i = i - 1;
+}
+i;</code></pre>
+          <pre class="right"><code>let i = 10;
+while ((i > 0)) {
+  i = (i - 1);
+}
+i;</code></pre>
+        </div>
+
+        <p class="example-label">8 · Booleans &amp; logic</p>
+        <div class="example-grid">
+          <div class="col-head">Cubescript</div>
+          <div class="col-head right">Generated JavaScript (optimized)</div>
+          <pre><code>let has_sword = true;
+let has_shield = false;
+let ready = has_sword &amp;&amp; !has_shield;</code></pre>
+          <pre class="right"><code>let has_sword = true;
+let has_shield = false;
+let ready = (has_sword &amp;&amp; (!false));</code></pre>
+        </div>
+
+        <p class="example-label">9 · Static error — undefined identifier</p>
         <div class="example-grid">
           <div class="col-head">Cubescript (compile-time error ✗)</div>
           <div class="col-head right">Compiler output</div>
@@ -339,14 +403,13 @@ mobs_spawned + mobs_spawned;</code></pre>
 'diamond_pick'</code></pre>
         </div>
 
-        <p class="example-label">6 · Static error — duplicate binding</p>
+        <p class="example-label">10 · Static error — return outside function</p>
         <div class="example-grid">
           <div class="col-head">Cubescript (compile-time error ✗)</div>
           <div class="col-head right">Compiler output</div>
-          <pre><code>let sword = 1;
-let sword = 2;</code></pre>
-          <pre class="right"><code>CubescriptError: Duplicate binding
-'sword' in the same scope</code></pre>
+          <pre><code>return 42;</code></pre>
+          <pre class="right"><code>CubescriptError: Return statement
+outside of a function</code></pre>
         </div>
 
       </div>
@@ -361,10 +424,13 @@ let sword = 2;</code></pre>
           <tbody>
             <tr><td>Parse / syntax errors</td><td class="ok">&#10003; Implemented</td></tr>
             <tr><td>Undefined identifiers</td><td class="ok">&#10003; Implemented</td></tr>
+            <tr><td>Undefined function names at call site</td><td class="ok">&#10003; Implemented</td></tr>
             <tr><td>Duplicate bindings in the same scope</td><td class="ok">&#10003; Implemented</td></tr>
-            <tr><td>Constant folding (<code>+</code>, <code>*</code> on literals)</td><td class="ok">&#10003; Implemented</td></tr>
+            <tr><td><code>return</code> outside a function</td><td class="ok">&#10003; Implemented</td></tr>
+            <tr><td><code>break</code> outside a loop</td><td class="ok">&#10003; Implemented</td></tr>
+            <tr><td>Constant folding (all arithmetic, comparisons, booleans)</td><td class="ok">&#10003; Implemented</td></tr>
             <tr><td>Type checking</td><td class="todo">&#8987; Not yet implemented</td></tr>
-            <tr><td>Control-flow checks (return / break / continue)</td><td class="todo">&#8987; Not yet implemented</td></tr>
+            <tr><td><code>continue</code> statement</td><td class="todo">&#8987; Not yet implemented</td></tr>
           </tbody>
         </table>
         <p style="margin-top:1rem; font-size:1rem; color:#8a9aaa;">
