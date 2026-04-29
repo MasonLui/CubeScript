@@ -6,8 +6,8 @@
 
 **Write logic for cube worlds — statically checked, Sponge-ready.**
 
-[![Tests](https://img.shields.io/badge/tests-109%20passing-brightgreen)]()
-[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-118%20passing-brightgreen)]()
+[![Coverage](https://img.shields.io/badge/coverage-90.59%25-yellowgreen)]()
 
 </div>
 
@@ -80,7 +80,7 @@ A thin companion Sponge plugin loads the compiled `.cube` output using GraalVM's
 
 1. **Install Node 18+** (LTS is fine).
 2. In this directory run **`npm install`**.
-3. Run **`npm test`** — all 139 tests should pass with 100% branch coverage.
+3. Run **`npm test`** — all tests should pass and coverage will be reported.
 4. Try the CLI:
    ```bash
    node src/cubescript.js run examples/12-mod-recipe.cube
@@ -151,7 +151,7 @@ Ohm spec: [`src/cubescript.ohm`](src/cubescript.ohm)
 npm test
 ```
 
-Uses `c8` over Node's built-in test runner. **139 tests, all passing, 100% branch coverage.**
+Uses `c8` over Node's built-in test runner. Current baseline: **118 tests, all passing**.
 
 ## License
 
