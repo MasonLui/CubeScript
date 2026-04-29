@@ -45,6 +45,33 @@ test('parse operators and parens', () => {
   assert.strictEqual(init.op, '*');
 });
 
+test('parse multiplication has higher precedence than addition', () => {
+  const ast = parse('1 + 2 * 3;');
+  const expr = ast.statements[0].expr;
+  assert.strictEqual(expr.kind, 'Binary');
+  assert.strictEqual(expr.op, '+');
+  assert.strictEqual(expr.right.kind, 'Binary');
+  assert.strictEqual(expr.right.op, '*');
+});
+
+test('parse handles whitespace and newlines around tokens', () => {
+  const ast = parse('let x = 1;\n  \n x + 2;');
+  assert.strictEqual(ast.statements.length, 2);
+  assert.strictEqual(ast.statements[1].kind, 'ExprStmt');
+});
+
+test('parse reports line and column on multiline syntax error', () => {
+  try {
+    parse('let x = 1;\nlet y = ;');
+    assert.fail('expected parse to throw');
+  } catch (err) {
+    assert.ok(err instanceof CubescriptError);
+    assert.ok(typeof err.line === 'number');
+    assert.ok(typeof err.col === 'number');
+    assert.ok(err.line >= 2);
+  }
+});
+
 test('parse fails with CubescriptError', () => {
   assert.throws(() => parse('let = 1;'), CubescriptError);
 });

@@ -61,3 +61,47 @@ test('optimize passes through unknown statement kinds', () => {
   const out = optimize(weird);
   assert.strictEqual(out.statements[0].kind, 'FutureStmt');
 });
+
+test('optimize folds nested expressions recursively', () => {
+  const nested = {
+    kind: 'Program',
+    statements: [
+      {
+        kind: 'ExprStmt',
+        expr: {
+          kind: 'Binary',
+          op: '*',
+          left: {
+            kind: 'Binary',
+            op: '+',
+            left: { kind: 'Number', value: 1 },
+            right: { kind: 'Number', value: 2 },
+          },
+          right: { kind: 'Number', value: 5 },
+        },
+      },
+    ],
+  };
+  const out = optimize(nested);
+  assert.deepStrictEqual(out.statements[0].expr, { kind: 'Number', value: 15 });
+});
+
+test('optimize does not fold unknown operators', () => {
+  const unknownOp = {
+    kind: 'Program',
+    statements: [
+      {
+        kind: 'ExprStmt',
+        expr: {
+          kind: 'Binary',
+          op: '-',
+          left: { kind: 'Number', value: 5 },
+          right: { kind: 'Number', value: 2 },
+        },
+      },
+    ],
+  };
+  const out = optimize(unknownOp);
+  assert.strictEqual(out.statements[0].expr.kind, 'Binary');
+  assert.strictEqual(out.statements[0].expr.op, '-');
+});

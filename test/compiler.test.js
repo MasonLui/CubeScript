@@ -43,6 +43,12 @@ test('stages.generate returns string', () => {
   assert.ok(typeof js === 'string' && js.includes('let x'));
 });
 
+test('stages.optimize marks ast as analyzed and optimized', () => {
+  const ast = stages.optimize('let x = 1 + 1; x;');
+  assert.strictEqual(ast.analyzed, true);
+  assert.strictEqual(ast.optimized, true);
+});
+
 test('CLI syntax ok', () => {
   const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
   const f = join(dir, 't.cube');
@@ -157,4 +163,24 @@ test('CLI reports missing file cleanly', () => {
   const r = runCli(['syntax', join(tmpdir(), 'cubescript-does-not-exist-99.cube')]);
   assert.strictEqual(r.status, 1);
   assert.ok(r.stderr.includes('File not found'));
+});
+
+test('CLI parse fails on invalid syntax', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
+  const f = join(dir, 't.cube');
+  writeFileSync(f, 'let = 9;');
+  const r = runCli(['parse', f]);
+  assert.strictEqual(r.status, 1);
+  assert.ok(r.stderr.includes('CubescriptError'));
+  unlinkSync(f);
+});
+
+test('CLI optimize output includes optimized marker', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
+  const f = join(dir, 't.cube');
+  writeFileSync(f, 'let a = 1 + 2;');
+  const r = runCli(['optimize', f]);
+  assert.strictEqual(r.status, 0, r.stderr);
+  assert.ok(r.stdout.includes('"optimized": true'));
+  unlinkSync(f);
 });

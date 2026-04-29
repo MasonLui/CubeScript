@@ -57,3 +57,48 @@ test('analyze rejects unknown expression kind', () => {
   };
   assert.throws(() => analyze(ast), CubescriptError);
 });
+
+test('analyze accepts nested binary with declared identifiers', () => {
+  const ast = {
+    kind: 'Program',
+    statements: [
+      { kind: 'Let', name: 'x', init: { kind: 'Number', value: 1 } },
+      { kind: 'Let', name: 'y', init: { kind: 'Number', value: 2 } },
+      {
+        kind: 'ExprStmt',
+        expr: {
+          kind: 'Binary',
+          op: '+',
+          left: { kind: 'Id', name: 'x' },
+          right: {
+            kind: 'Binary',
+            op: '*',
+            left: { kind: 'Id', name: 'y' },
+            right: { kind: 'Number', value: 3 },
+          },
+        },
+      },
+    ],
+  };
+  const out = analyze(ast);
+  assert.strictEqual(out.analyzed, true);
+});
+
+test('analyze rejects self-reference in let initializer', () => {
+  const ast = {
+    kind: 'Program',
+    statements: [{ kind: 'Let', name: 'x', init: { kind: 'Id', name: 'x' } }],
+  };
+  assert.throws(() => analyze(ast), /Undefined identifier 'x'/);
+});
+
+test('analyze reports first error when multiple exist', () => {
+  const ast = {
+    kind: 'Program',
+    statements: [
+      { kind: 'ExprStmt', expr: { kind: 'Id', name: 'missingA' } },
+      { kind: 'ExprStmt', expr: { kind: 'Id', name: 'missingB' } },
+    ],
+  };
+  assert.throws(() => analyze(ast), /missingA/);
+});

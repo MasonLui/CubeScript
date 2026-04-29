@@ -48,3 +48,39 @@ test('generate throws on unknown expr kind', () => {
   };
   assert.throws(() => generate(ast), /Cannot generate/);
 });
+
+test('generate emits multiple lines for multiple statements', () => {
+  const ast = {
+    kind: 'Program',
+    statements: [
+      { kind: 'Let', name: 'x', init: { kind: 'Number', value: 1 } },
+      { kind: 'ExprStmt', expr: { kind: 'Id', name: 'x' } },
+    ],
+  };
+  const js = generate(ast);
+  assert.strictEqual(js.split('\n').length, 2);
+});
+
+test('generate preserves operator order with parentheses', () => {
+  const ast = {
+    kind: 'Program',
+    statements: [
+      {
+        kind: 'ExprStmt',
+        expr: {
+          kind: 'Binary',
+          op: '*',
+          left: {
+            kind: 'Binary',
+            op: '+',
+            left: { kind: 'Number', value: 1 },
+            right: { kind: 'Number', value: 2 },
+          },
+          right: { kind: 'Number', value: 3 },
+        },
+      },
+    ],
+  };
+  const js = generate(ast);
+  assert.ok(js.includes('((1 + 2) * 3);'));
+});
