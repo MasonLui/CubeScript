@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Cubescript — grass block cube">
-  <rect width="64" height="64" fill="#2d2d2d"/>
-  <!-- isometric-ish grass block -->
-  <path fill="#5c9e32" d="M8 40 L32 24 L56 40 L32 56 Z"/>
-  <path fill="#3d6b22" d="M8 40 L8 48 L32 64 L32 56 Z"/>
-  <path fill="#4a8230" d="M56 40 L56 48 L32 64 L32 56 Z"/>
-  <rect x="22" y="18" width="20" height="12" fill="#6b4423"/>
-</svg>

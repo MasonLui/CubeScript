@@ -1,26 +1,79 @@
 Cubescript {
   Prog = Stmt*
 
-  Stmt = LetStmt | ExprStmt
-  LetStmt = letKeyword id "=" Expr ";"
-  ExprStmt = Expr ";"
+  Stmt = FuncDecl
+       | IfStmt
+       | WhileStmt
+       | ReturnStmt
+       | BreakStmt
+       | ContinueStmt
+       | LetStmt
+       | AssignStmt
+       | ExprStmt
 
-  Expr = Expr "+" Term  -- plus
-       | Term
-  Term = Term "*" Factor  -- mul
-       | Factor
-  Factor = string
-         | number
-         | id
-         | FactorParen
-  FactorParen = "(" Expr ")"
+  FuncDecl  = mineKeyword id "(" Params ")" Block
+  Params    = ListOf<id, ",">
+  Block     = "{" Stmt* "}"
 
-  string = "\"" stringChars "\""
-  stringChars = stringChar*
+  IfStmt    = ifKeyword "(" Expr ")" Block (elseKeyword Block)?
+  WhileStmt = whileKeyword "(" Expr ")" Block
+  ReturnStmt    = returnKeyword Expr? ";"
+  BreakStmt     = breakKeyword ";"
+  ContinueStmt  = continueKeyword ";"
+
+  LetStmt    = letKeyword id "=" Expr ";"
+  AssignStmt = id "=" Expr ";"
+  ExprStmt   = Expr ";"
+
+  Expr = Expr "||" Expr2  -- or
+       | Expr2
+  Expr2 = Expr2 "&&" Expr3  -- and
+        | Expr3
+  Expr3 = Expr3 "==" Expr4  -- eq
+        | Expr3 "!=" Expr4  -- ne
+        | Expr3 "<=" Expr4  -- le
+        | Expr3 ">=" Expr4  -- ge
+        | Expr3 "<"  Expr4  -- lt
+        | Expr3 ">"  Expr4  -- gt
+        | Expr4
+  Expr4 = Expr4 "+" Expr5   -- plus
+        | Expr4 "-" Expr5   -- minus
+        | Expr5
+  Expr5 = Expr5 "*" Unary   -- mul
+        | Expr5 "/" Unary   -- div
+        | Unary
+  Unary = "!" Unary          -- not
+        | "-" Unary          -- neg
+        | Call
+  Call  = id "(" Args ")"   -- call
+        | Primary
+  Args  = ListOf<Expr, ",">
+  Primary = boolLit
+          | string
+          | number
+          | id
+          | "(" Expr ")"    -- paren
+
+  boolLit   = trueKeyword | falseKeyword
+  string    = "\"" stringChar* "\""
   stringChar = ~("\"" | "\n") any
+  number    = digit+
 
-  letKeyword = "let" ~idChar
-  id = (letter | "_") idChar*
-  idChar = letter | digit | "_"
-  number = digit+
+  letKeyword      = "let"      ~idChar
+  mineKeyword     = "mine"     ~idChar
+  ifKeyword       = "if"       ~idChar
+  elseKeyword     = "else"     ~idChar
+  whileKeyword    = "while"    ~idChar
+  returnKeyword   = "return"   ~idChar
+  breakKeyword    = "break"    ~idChar
+  continueKeyword = "continue" ~idChar
+  trueKeyword     = "true"     ~idChar
+  falseKeyword    = "false"    ~idChar
+
+  keyword = letKeyword | mineKeyword | ifKeyword | elseKeyword
+          | whileKeyword | returnKeyword | breakKeyword | continueKeyword
+          | trueKeyword | falseKeyword
+
+  id      = ~keyword (letter | "_") idChar*
+  idChar  = letter | digit | "_"
 }

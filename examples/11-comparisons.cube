@@ -1,0 +1,9 @@
+mine max(a, b) {
+  if (a >= b) {
+    return a;
+  }
+  return b;
+}
+
+let highest = max(10, 42);
+highest;

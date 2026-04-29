@@ -1,0 +1,11 @@
+mine is_daytime(hour) {
+  if (hour >= 6) {
+    if (hour <= 18) {
+      return true;
+    }
+  }
+  return false;
+}
+
+let daytime = is_daytime(12);
+daytime;

@@ -1,0 +1,10 @@
+mine count_down(n) {
+  let i = n;
+  while (i > 0) {
+    i = i - 1;
+  }
+  return i;
+}
+
+let result = count_down(5);
+result;
