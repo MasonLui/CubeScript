@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Cubescript — block-flavored language for mod-minded tooling (LMU CMSI 3802)",
   "type": "module",
-  "author": "Team Name <replace@lm.edu>",
+  "author": "Mason Lui, Leila Nawas, Aidan Hodges, Paige Inoue, Cooper Clausen",
   "license": "MIT",
   "repository": {
     "type": "git",

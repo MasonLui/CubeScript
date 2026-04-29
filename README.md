@@ -12,9 +12,11 @@
 
 | Name | GitHub |
 |------|--------|
-| _Add teammates_ | _@handles_ |
-
-Update `package.json` → `author` and `repository.url` with real values.
+| Mason Lui | [@MasonLui](https://github.com/MasonLui) |
+| Leila Nawas | [@leilanawas](https://github.com/leilanawas) |
+| Aidan Hodges | [@aidanhodges27](https://github.com/aidanhodges27) |
+| Paige Inoue | [@paigei](https://github.com/paigei) |
+| Cooper Clausen | [@CooperClausen](https://github.com/CooperClausen) |
 
 ## One-paragraph story
 
