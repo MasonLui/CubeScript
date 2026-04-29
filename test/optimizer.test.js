@@ -309,7 +309,7 @@ test('optimize does not fold unknown operators', () => {
         kind: 'ExprStmt',
         expr: {
           kind: 'Binary',
-          op: '-',
+          op: '^',
           left: { kind: 'Number', value: 5 },
           right: { kind: 'Number', value: 2 },
         },
@@ -318,5 +318,5 @@ test('optimize does not fold unknown operators', () => {
   };
   const out = optimize(unknownOp);
   assert.strictEqual(out.statements[0].expr.kind, 'Binary');
-  assert.strictEqual(out.statements[0].expr.op, '-');
+  assert.strictEqual(out.statements[0].expr.op, '^');
 });
