@@ -60,7 +60,10 @@ function buildSemantics(g) {
       return { kind: 'While', cond: cond.toAst(), body: body.toAst() };
     },
     ReturnStmt(_ret, expr, _semi) {
-      return { kind: 'Return', value: expr.children.length > 0 ? expr.children[0].toAst() : null };
+      return {
+        kind: 'Return',
+        value: expr.children.length > 0 ? expr.children[0].toAst() : null,
+      };
     },
     BreakStmt(_break, _semi) {
       return { kind: 'Break' };
@@ -81,15 +84,21 @@ function buildSemantics(g) {
     },
 
     // ── expressions ───────────────────────────────────────────
-    Expr(e) { return e.toAst(); },
+    Expr(e) {
+      return e.toAst();
+    },
     Expr_or(left, _op, right) {
       return { kind: 'Binary', op: '||', left: left.toAst(), right: right.toAst() };
     },
-    Expr2(e) { return e.toAst(); },
+    Expr2(e) {
+      return e.toAst();
+    },
     Expr2_and(left, _op, right) {
       return { kind: 'Binary', op: '&&', left: left.toAst(), right: right.toAst() };
     },
-    Expr3(e) { return e.toAst(); },
+    Expr3(e) {
+      return e.toAst();
+    },
     Expr3_eq(left, _op, right) {
       return { kind: 'Binary', op: '===', left: left.toAst(), right: right.toAst() };
     },
@@ -108,43 +117,58 @@ function buildSemantics(g) {
     Expr3_gt(left, _op, right) {
       return { kind: 'Binary', op: '>', left: left.toAst(), right: right.toAst() };
     },
-    Expr4(e) { return e.toAst(); },
+    Expr4(e) {
+      return e.toAst();
+    },
     Expr4_plus(left, _op, right) {
       return { kind: 'Binary', op: '+', left: left.toAst(), right: right.toAst() };
     },
     Expr4_minus(left, _op, right) {
       return { kind: 'Binary', op: '-', left: left.toAst(), right: right.toAst() };
     },
-    Expr5(e) { return e.toAst(); },
+    Expr5(e) {
+      return e.toAst();
+    },
     Expr5_mul(left, _op, right) {
       return { kind: 'Binary', op: '*', left: left.toAst(), right: right.toAst() };
     },
     Expr5_div(left, _op, right) {
       return { kind: 'Binary', op: '/', left: left.toAst(), right: right.toAst() };
     },
-    Unary(u) { return u.toAst(); },
+    Unary(u) {
+      return u.toAst();
+    },
     Unary_not(_bang, expr) {
       return { kind: 'Unary', op: '!', expr: expr.toAst() };
     },
     Unary_neg(_minus, expr) {
       return { kind: 'Unary', op: '-', expr: expr.toAst() };
     },
-    Call(c) { return c.toAst(); },
+    Call(c) {
+      return c.toAst();
+    },
     Call_call(idNode, _lp, args, _rp) {
       return { kind: 'Call', name: idNode.sourceString, args: args.toAst() };
     },
     Args(list) {
       return list.asIteration().children.map((c) => c.toAst());
     },
-    Primary(p) { return p.toAst(); },
-    Primary_paren(_lp, expr, _rp) { return expr.toAst(); },
+    Primary(p) {
+      return p.toAst();
+    },
+    Primary_paren(_lp, expr, _rp) {
+      return expr.toAst();
+    },
 
     // ── literals ──────────────────────────────────────────────
     boolLit(node) {
       return { kind: 'Boolean', value: node.sourceString === 'true' };
     },
     string(_open, chars, _close) {
-      return { kind: 'String', value: chars.children.map((c) => c.sourceString).join('') };
+      return {
+        kind: 'String',
+        value: chars.children.map((c) => c.sourceString).join(''),
+      };
     },
     stringChar(_any) {
       return this.sourceString;
@@ -157,16 +181,36 @@ function buildSemantics(g) {
     },
 
     // ── keywords (no AST value needed) ───────────────────────
-    letKeyword(_x)    { return undefined; },
-    mineKeyword(_x)   { return undefined; },
-    ifKeyword(_x)     { return undefined; },
-    elseKeyword(_x)   { return undefined; },
-    whileKeyword(_x)  { return undefined; },
-    returnKeyword(_x) { return undefined; },
-    breakKeyword(_x)    { return undefined; },
-    continueKeyword(_x) { return undefined; },
-    trueKeyword(_x)   { return undefined; },
-    falseKeyword(_x)  { return undefined; },
+    letKeyword(_x) {
+      return undefined;
+    },
+    mineKeyword(_x) {
+      return undefined;
+    },
+    ifKeyword(_x) {
+      return undefined;
+    },
+    elseKeyword(_x) {
+      return undefined;
+    },
+    whileKeyword(_x) {
+      return undefined;
+    },
+    returnKeyword(_x) {
+      return undefined;
+    },
+    breakKeyword(_x) {
+      return undefined;
+    },
+    continueKeyword(_x) {
+      return undefined;
+    },
+    trueKeyword(_x) {
+      return undefined;
+    },
+    falseKeyword(_x) {
+      return undefined;
+    },
   });
 }
 

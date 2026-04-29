@@ -9,28 +9,40 @@ function foldExpr(expr) {
       if (left.kind === 'Number' && right.kind === 'Number') {
         if (ARITH_OPS.has(expr.op)) {
           const v =
-            expr.op === '+' ? left.value + right.value :
-            expr.op === '-' ? left.value - right.value :
-            expr.op === '*' ? left.value * right.value :
-                              left.value / right.value;
+            expr.op === '+'
+              ? left.value + right.value
+              : expr.op === '-'
+                ? left.value - right.value
+                : expr.op === '*'
+                  ? left.value * right.value
+                  : left.value / right.value;
           return { kind: 'Number', value: v };
         }
         if (COMPARE_OPS.has(expr.op)) {
           const v =
-            expr.op === '<'   ? left.value < right.value :
-            expr.op === '>'   ? left.value > right.value :
-            expr.op === '<='  ? left.value <= right.value :
-            expr.op === '>='  ? left.value >= right.value :
-            expr.op === '===' ? left.value === right.value :
-                                left.value !== right.value;
+            expr.op === '<'
+              ? left.value < right.value
+              : expr.op === '>'
+                ? left.value > right.value
+                : expr.op === '<='
+                  ? left.value <= right.value
+                  : expr.op === '>='
+                    ? left.value >= right.value
+                    : expr.op === '==='
+                      ? left.value === right.value
+                      : left.value !== right.value;
           return { kind: 'Boolean', value: v };
         }
       }
       if (left.kind === 'Boolean' && right.kind === 'Boolean') {
-        if (expr.op === '&&') return { kind: 'Boolean', value: left.value && right.value };
-        if (expr.op === '||') return { kind: 'Boolean', value: left.value || right.value };
-        if (expr.op === '===') return { kind: 'Boolean', value: left.value === right.value };
-        if (expr.op === '!==') return { kind: 'Boolean', value: left.value !== right.value };
+        if (expr.op === '&&')
+          return { kind: 'Boolean', value: left.value && right.value };
+        if (expr.op === '||')
+          return { kind: 'Boolean', value: left.value || right.value };
+        if (expr.op === '===')
+          return { kind: 'Boolean', value: left.value === right.value };
+        if (expr.op === '!==')
+          return { kind: 'Boolean', value: left.value !== right.value };
       }
       return { ...expr, left, right };
     }

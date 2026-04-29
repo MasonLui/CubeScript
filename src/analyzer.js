@@ -95,7 +95,9 @@ function walkStmt(stmt, env, ctx, errors) {
   switch (stmt.kind) {
     case 'Let': {
       if (env.has(stmt.name)) {
-        errors.push(new CubescriptError(`Duplicate binding '${stmt.name}' in the same scope`));
+        errors.push(
+          new CubescriptError(`Duplicate binding '${stmt.name}' in the same scope`)
+        );
       }
       const t = walkExpr(stmt.init, env, ctx, errors);
       env.set(stmt.name, t);
@@ -122,7 +124,9 @@ function walkStmt(stmt, env, ctx, errors) {
       break;
     case 'FuncDecl': {
       if (env.has(stmt.name)) {
-        errors.push(new CubescriptError(`Duplicate binding '${stmt.name}' in the same scope`));
+        errors.push(
+          new CubescriptError(`Duplicate binding '${stmt.name}' in the same scope`)
+        );
       }
       env.set(stmt.name, 'any');
       const funcEnv = new Map(env);

@@ -34,7 +34,11 @@ test('analyze accepts unary expression', () => {
   const ast = {
     kind: 'Program',
     statements: [
-      { kind: 'Let', name: 'x', init: { kind: 'Unary', op: '-', expr: { kind: 'Number', value: 5 } } },
+      {
+        kind: 'Let',
+        name: 'x',
+        init: { kind: 'Unary', op: '-', expr: { kind: 'Number', value: 5 } },
+      },
     ],
   };
   analyze(ast);
@@ -45,7 +49,9 @@ test('analyze accepts function call with known function', () => {
     kind: 'Program',
     statements: [
       {
-        kind: 'FuncDecl', name: 'f', params: [],
+        kind: 'FuncDecl',
+        name: 'f',
+        params: [],
         body: [{ kind: 'Return', value: { kind: 'Number', value: 1 } }],
       },
       { kind: 'ExprStmt', expr: { kind: 'Call', name: 'f', args: [] } },
@@ -57,13 +63,24 @@ test('analyze accepts function call with known function', () => {
 test('analyze accepts function declaration and return', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'FuncDecl', name: 'add', params: ['a', 'b'],
-      body: [{
-        kind: 'Return',
-        value: { kind: 'Binary', op: '+', left: { kind: 'Id', name: 'a' }, right: { kind: 'Id', name: 'b' } },
-      }],
-    }],
+    statements: [
+      {
+        kind: 'FuncDecl',
+        name: 'add',
+        params: ['a', 'b'],
+        body: [
+          {
+            kind: 'Return',
+            value: {
+              kind: 'Binary',
+              op: '+',
+              left: { kind: 'Id', name: 'a' },
+              right: { kind: 'Id', name: 'b' },
+            },
+          },
+        ],
+      },
+    ],
   };
   analyze(ast);
 });
@@ -87,12 +104,14 @@ test('analyze accepts if statement', () => {
 test('analyze accepts if-else statement', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'If',
-      cond: { kind: 'Boolean', value: true },
-      then: [{ kind: 'ExprStmt', expr: { kind: 'Number', value: 1 } }],
-      else: [{ kind: 'ExprStmt', expr: { kind: 'Number', value: 2 } }],
-    }],
+    statements: [
+      {
+        kind: 'If',
+        cond: { kind: 'Boolean', value: true },
+        then: [{ kind: 'ExprStmt', expr: { kind: 'Number', value: 1 } }],
+        else: [{ kind: 'ExprStmt', expr: { kind: 'Number', value: 2 } }],
+      },
+    ],
   };
   analyze(ast);
 });
@@ -100,11 +119,13 @@ test('analyze accepts if-else statement', () => {
 test('analyze accepts while loop with break', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'While',
-      cond: { kind: 'Boolean', value: true },
-      body: [{ kind: 'Break' }],
-    }],
+    statements: [
+      {
+        kind: 'While',
+        cond: { kind: 'Boolean', value: true },
+        body: [{ kind: 'Break' }],
+      },
+    ],
   };
   analyze(ast);
 });
@@ -123,10 +144,14 @@ test('analyze accepts assignment to existing variable', () => {
 test('analyze accepts return with null value', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'FuncDecl', name: 'f', params: [],
-      body: [{ kind: 'Return', value: null }],
-    }],
+    statements: [
+      {
+        kind: 'FuncDecl',
+        name: 'f',
+        params: [],
+        body: [{ kind: 'Return', value: null }],
+      },
+    ],
   };
   analyze(ast);
 });
@@ -134,11 +159,13 @@ test('analyze accepts return with null value', () => {
 test('analyze accepts continue inside loop', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'While',
-      cond: { kind: 'Boolean', value: true },
-      body: [{ kind: 'Continue' }],
-    }],
+    statements: [
+      {
+        kind: 'While',
+        cond: { kind: 'Boolean', value: true },
+        body: [{ kind: 'Continue' }],
+      },
+    ],
   };
   analyze(ast);
 });
@@ -172,10 +199,18 @@ test('analyze infers string type for let', () => {
 test('analyze accepts arithmetic on numbers', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'Let', name: 'x',
-      init: { kind: 'Binary', op: '-', left: { kind: 'Number', value: 5 }, right: { kind: 'Number', value: 2 } },
-    }],
+    statements: [
+      {
+        kind: 'Let',
+        name: 'x',
+        init: {
+          kind: 'Binary',
+          op: '-',
+          left: { kind: 'Number', value: 5 },
+          right: { kind: 'Number', value: 2 },
+        },
+      },
+    ],
   };
   analyze(ast);
 });
@@ -183,10 +218,18 @@ test('analyze accepts arithmetic on numbers', () => {
 test('analyze accepts comparison on numbers', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'Let', name: 'b',
-      init: { kind: 'Binary', op: '<', left: { kind: 'Number', value: 1 }, right: { kind: 'Number', value: 2 } },
-    }],
+    statements: [
+      {
+        kind: 'Let',
+        name: 'b',
+        init: {
+          kind: 'Binary',
+          op: '<',
+          left: { kind: 'Number', value: 1 },
+          right: { kind: 'Number', value: 2 },
+        },
+      },
+    ],
   };
   analyze(ast);
 });
@@ -194,10 +237,18 @@ test('analyze accepts comparison on numbers', () => {
 test('analyze accepts logical ops on booleans', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'Let', name: 'r',
-      init: { kind: 'Binary', op: '&&', left: { kind: 'Boolean', value: true }, right: { kind: 'Boolean', value: false } },
-    }],
+    statements: [
+      {
+        kind: 'Let',
+        name: 'r',
+        init: {
+          kind: 'Binary',
+          op: '&&',
+          left: { kind: 'Boolean', value: true },
+          right: { kind: 'Boolean', value: false },
+        },
+      },
+    ],
   };
   analyze(ast);
 });
@@ -205,10 +256,18 @@ test('analyze accepts logical ops on booleans', () => {
 test('analyze accepts == on same types', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'Let', name: 'r',
-      init: { kind: 'Binary', op: '===', left: { kind: 'Number', value: 1 }, right: { kind: 'Number', value: 1 } },
-    }],
+    statements: [
+      {
+        kind: 'Let',
+        name: 'r',
+        init: {
+          kind: 'Binary',
+          op: '===',
+          left: { kind: 'Number', value: 1 },
+          right: { kind: 'Number', value: 1 },
+        },
+      },
+    ],
   };
   analyze(ast);
 });
@@ -216,10 +275,18 @@ test('analyze accepts == on same types', () => {
 test('analyze accepts + on numbers', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'Let', name: 'r',
-      init: { kind: 'Binary', op: '+', left: { kind: 'Number', value: 1 }, right: { kind: 'Number', value: 2 } },
-    }],
+    statements: [
+      {
+        kind: 'Let',
+        name: 'r',
+        init: {
+          kind: 'Binary',
+          op: '+',
+          left: { kind: 'Number', value: 1 },
+          right: { kind: 'Number', value: 2 },
+        },
+      },
+    ],
   };
   analyze(ast);
 });
@@ -227,10 +294,18 @@ test('analyze accepts + on numbers', () => {
 test('analyze accepts + on strings', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'Let', name: 'r',
-      init: { kind: 'Binary', op: '+', left: { kind: 'String', value: 'a' }, right: { kind: 'String', value: 'b' } },
-    }],
+    statements: [
+      {
+        kind: 'Let',
+        name: 'r',
+        init: {
+          kind: 'Binary',
+          op: '+',
+          left: { kind: 'String', value: 'a' },
+          right: { kind: 'String', value: 'b' },
+        },
+      },
+    ],
   };
   analyze(ast);
 });
@@ -238,10 +313,13 @@ test('analyze accepts + on strings', () => {
 test('analyze accepts unary not on boolean', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'Let', name: 'r',
-      init: { kind: 'Unary', op: '!', expr: { kind: 'Boolean', value: true } },
-    }],
+    statements: [
+      {
+        kind: 'Let',
+        name: 'r',
+        init: { kind: 'Unary', op: '!', expr: { kind: 'Boolean', value: true } },
+      },
+    ],
   };
   analyze(ast);
 });
@@ -249,10 +327,13 @@ test('analyze accepts unary not on boolean', () => {
 test('analyze accepts unary neg on number', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'Let', name: 'r',
-      init: { kind: 'Unary', op: '-', expr: { kind: 'Number', value: 5 } },
-    }],
+    statements: [
+      {
+        kind: 'Let',
+        name: 'r',
+        init: { kind: 'Unary', op: '-', expr: { kind: 'Number', value: 5 } },
+      },
+    ],
   };
   analyze(ast);
 });
@@ -276,10 +357,18 @@ test('analyze rejects continue outside loop', () => {
 test('analyze rejects arithmetic on boolean', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'Let', name: 'x',
-      init: { kind: 'Binary', op: '-', left: { kind: 'Boolean', value: true }, right: { kind: 'Number', value: 1 } },
-    }],
+    statements: [
+      {
+        kind: 'Let',
+        name: 'x',
+        init: {
+          kind: 'Binary',
+          op: '-',
+          left: { kind: 'Boolean', value: true },
+          right: { kind: 'Number', value: 1 },
+        },
+      },
+    ],
   };
   assert.throws(() => analyze(ast), CubescriptError);
 });
@@ -287,10 +376,18 @@ test('analyze rejects arithmetic on boolean', () => {
 test('analyze rejects arithmetic on string', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'Let', name: 'x',
-      init: { kind: 'Binary', op: '*', left: { kind: 'String', value: 'a' }, right: { kind: 'Number', value: 2 } },
-    }],
+    statements: [
+      {
+        kind: 'Let',
+        name: 'x',
+        init: {
+          kind: 'Binary',
+          op: '*',
+          left: { kind: 'String', value: 'a' },
+          right: { kind: 'Number', value: 2 },
+        },
+      },
+    ],
   };
   assert.throws(() => analyze(ast), CubescriptError);
 });
@@ -298,10 +395,18 @@ test('analyze rejects arithmetic on string', () => {
 test('analyze rejects comparison on booleans', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'Let', name: 'r',
-      init: { kind: 'Binary', op: '<', left: { kind: 'Boolean', value: true }, right: { kind: 'Boolean', value: false } },
-    }],
+    statements: [
+      {
+        kind: 'Let',
+        name: 'r',
+        init: {
+          kind: 'Binary',
+          op: '<',
+          left: { kind: 'Boolean', value: true },
+          right: { kind: 'Boolean', value: false },
+        },
+      },
+    ],
   };
   assert.throws(() => analyze(ast), CubescriptError);
 });
@@ -309,10 +414,18 @@ test('analyze rejects comparison on booleans', () => {
 test('analyze rejects logical op on numbers', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'Let', name: 'r',
-      init: { kind: 'Binary', op: '&&', left: { kind: 'Number', value: 1 }, right: { kind: 'Number', value: 2 } },
-    }],
+    statements: [
+      {
+        kind: 'Let',
+        name: 'r',
+        init: {
+          kind: 'Binary',
+          op: '&&',
+          left: { kind: 'Number', value: 1 },
+          right: { kind: 'Number', value: 2 },
+        },
+      },
+    ],
   };
   assert.throws(() => analyze(ast), CubescriptError);
 });
@@ -320,10 +433,13 @@ test('analyze rejects logical op on numbers', () => {
 test('analyze rejects ! on number', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'Let', name: 'r',
-      init: { kind: 'Unary', op: '!', expr: { kind: 'Number', value: 1 } },
-    }],
+    statements: [
+      {
+        kind: 'Let',
+        name: 'r',
+        init: { kind: 'Unary', op: '!', expr: { kind: 'Number', value: 1 } },
+      },
+    ],
   };
   assert.throws(() => analyze(ast), CubescriptError);
 });
@@ -331,10 +447,13 @@ test('analyze rejects ! on number', () => {
 test('analyze rejects unary neg on boolean', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'Let', name: 'r',
-      init: { kind: 'Unary', op: '-', expr: { kind: 'Boolean', value: true } },
-    }],
+    statements: [
+      {
+        kind: 'Let',
+        name: 'r',
+        init: { kind: 'Unary', op: '-', expr: { kind: 'Boolean', value: true } },
+      },
+    ],
   };
   assert.throws(() => analyze(ast), CubescriptError);
 });
@@ -342,10 +461,18 @@ test('analyze rejects unary neg on boolean', () => {
 test('analyze rejects == on mismatched types', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'Let', name: 'r',
-      init: { kind: 'Binary', op: '===', left: { kind: 'Number', value: 1 }, right: { kind: 'Boolean', value: true } },
-    }],
+    statements: [
+      {
+        kind: 'Let',
+        name: 'r',
+        init: {
+          kind: 'Binary',
+          op: '===',
+          left: { kind: 'Number', value: 1 },
+          right: { kind: 'Boolean', value: true },
+        },
+      },
+    ],
   };
   assert.throws(() => analyze(ast), CubescriptError);
 });
@@ -354,9 +481,22 @@ test('analyze accepts binary op with any-typed operands returns any', () => {
   const ast = {
     kind: 'Program',
     statements: [
-      { kind: 'FuncDecl', name: 'f', params: ['a', 'b'], body: [
-        { kind: 'Return', value: { kind: 'Binary', op: '+', left: { kind: 'Id', name: 'a' }, right: { kind: 'Id', name: 'b' } } },
-      ]},
+      {
+        kind: 'FuncDecl',
+        name: 'f',
+        params: ['a', 'b'],
+        body: [
+          {
+            kind: 'Return',
+            value: {
+              kind: 'Binary',
+              op: '+',
+              left: { kind: 'Id', name: 'a' },
+              right: { kind: 'Id', name: 'b' },
+            },
+          },
+        ],
+      },
     ],
   };
   analyze(ast);
@@ -365,10 +505,17 @@ test('analyze accepts binary op with any-typed operands returns any', () => {
 test('analyze returns any for unknown binary op', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'ExprStmt',
-      expr: { kind: 'Binary', op: '%', left: { kind: 'Number', value: 1 }, right: { kind: 'Number', value: 2 } },
-    }],
+    statements: [
+      {
+        kind: 'ExprStmt',
+        expr: {
+          kind: 'Binary',
+          op: '%',
+          left: { kind: 'Number', value: 1 },
+          right: { kind: 'Number', value: 2 },
+        },
+      },
+    ],
   };
   analyze(ast);
 });
@@ -376,10 +523,12 @@ test('analyze returns any for unknown binary op', () => {
 test('analyze accepts unary op with unknown op returns any', () => {
   const ast = {
     kind: 'Program',
-    statements: [{
-      kind: 'ExprStmt',
-      expr: { kind: 'Unary', op: '~', expr: { kind: 'Number', value: 5 } },
-    }],
+    statements: [
+      {
+        kind: 'ExprStmt',
+        expr: { kind: 'Unary', op: '~', expr: { kind: 'Number', value: 5 } },
+      },
+    ],
   };
   analyze(ast);
 });
@@ -428,7 +577,9 @@ test('analyze rejects duplicate function name', () => {
 test('analyze rejects undefined function call', () => {
   const ast = {
     kind: 'Program',
-    statements: [{ kind: 'ExprStmt', expr: { kind: 'Call', name: 'missing', args: [] } }],
+    statements: [
+      { kind: 'ExprStmt', expr: { kind: 'Call', name: 'missing', args: [] } },
+    ],
   };
   assert.throws(() => analyze(ast), CubescriptError);
 });
@@ -438,7 +589,10 @@ test('analyze rejects undefined identifier in function call arg', () => {
     kind: 'Program',
     statements: [
       { kind: 'FuncDecl', name: 'f', params: ['x'], body: [] },
-      { kind: 'ExprStmt', expr: { kind: 'Call', name: 'f', args: [{ kind: 'Id', name: 'nope' }] } },
+      {
+        kind: 'ExprStmt',
+        expr: { kind: 'Call', name: 'f', args: [{ kind: 'Id', name: 'nope' }] },
+      },
     ],
   };
   assert.throws(() => analyze(ast), CubescriptError);
@@ -463,7 +617,9 @@ test('analyze rejects break outside loop', () => {
 test('analyze rejects assignment to undefined variable', () => {
   const ast = {
     kind: 'Program',
-    statements: [{ kind: 'Assign', name: 'ghost', value: { kind: 'Number', value: 1 } }],
+    statements: [
+      { kind: 'Assign', name: 'ghost', value: { kind: 'Number', value: 1 } },
+    ],
   };
   assert.throws(() => analyze(ast), CubescriptError);
 });

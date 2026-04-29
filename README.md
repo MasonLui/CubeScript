@@ -13,19 +13,19 @@
 
 ## Team
 
-| Name | GitHub |
-|------|--------|
-| Mason Lui | [@MasonLui](https://github.com/MasonLui) |
-| Leila Nawas | [@leilanawas](https://github.com/leilanawas) |
-| Aidan Hodges | [@aidanhodges27](https://github.com/aidanhodges27) |
-| Paige Inoue | [@paigei](https://github.com/paigei) |
+| Name           | GitHub                                             |
+| -------------- | -------------------------------------------------- |
+| Mason Lui      | [@MasonLui](https://github.com/MasonLui)           |
+| Leila Nawas    | [@leilanawas](https://github.com/leilanawas)       |
+| Aidan Hodges   | [@aidanhodges27](https://github.com/aidanhodges27) |
+| Paige Inoue    | [@paigei](https://github.com/paigei)               |
 | Cooper Clausen | [@CooperClausen](https://github.com/CooperClausen) |
 
 ## One-paragraph story
 
 **Cubescript** is a statically checked scripting language designed for the **Sponge** modding ecosystem. You write `.cube` files that describe game logic — event handlers, world queries, item recipes — and the compiler catches scope errors, bad control flow, and undefined names at compile time instead of deep inside a running Minecraft server. Cubescript compiles to JavaScript intended to run inside a [SpongeForge](https://spongepowered.org/) plugin host via **GraalVM's Polyglot API**, which lets the JVM execute JS without leaving the server process or launching any external runtime. Under the hood this is a real CMSI 3802 pipeline: Ohm grammar → AST → static analysis → constant-folding optimizer → JS codegen.
 
-*Cubescript is a student project and is not affiliated with Mojang, Microsoft, Minecraft, or the SpongePowered project.*
+_Cubescript is a student project and is not affiliated with Mojang, Microsoft, Minecraft, or the SpongePowered project._
 
 ## Target runtime architecture
 
@@ -63,15 +63,15 @@ A thin companion Sponge plugin loads the compiled `.cube` output using GraalVM's
 
 ## Static, safety, and security checks
 
-| Check | Status |
-|-------|--------|
-| Parse / syntax errors | Implemented |
-| Undefined identifiers | Implemented |
-| Duplicate bindings in the same scope | Implemented |
-| Undefined function names | Implemented |
-| `return` outside a function | Implemented |
-| `break` / `continue` outside a loop | Implemented |
-| Constant folding (arithmetic, comparisons, booleans) | Implemented |
+| Check                                                        | Status      |
+| ------------------------------------------------------------ | ----------- |
+| Parse / syntax errors                                        | Implemented |
+| Undefined identifiers                                        | Implemented |
+| Duplicate bindings in the same scope                         | Implemented |
+| Undefined function names                                     | Implemented |
+| `return` outside a function                                  | Implemented |
+| `break` / `continue` outside a loop                          | Implemented |
+| Constant folding (arithmetic, comparisons, booleans)         | Implemented |
 | Type checking (arithmetic, comparisons, logical, assignment) | Implemented |
 
 **Security note:** the CLI `run` command uses `eval` only as a teaching shortcut. The production path is `generate` → embed output in the Sponge GraalVM host.
@@ -80,7 +80,7 @@ A thin companion Sponge plugin loads the compiled `.cube` output using GraalVM's
 
 1. **Install Node 18+** (LTS is fine).
 2. In this directory run **`npm install`**.
-3. Run **`npm test`** — all 139 tests should pass with 100% branch coverage.
+3. Run **`npm test`** — all 216 tests should pass with 100% branch coverage.
 4. Try the CLI:
    ```bash
    node src/cubescript.js run examples/12-mod-recipe.cube
@@ -133,13 +133,13 @@ Global install (optional): `npm link` then `cubescript run file.cube`.
 
 ## Examples vs JavaScript
 
-| Cubescript | Generated JavaScript |
-|------------|----------------------|
-| `let x = 2 + 3;` | `let x = 5;` (constant-folded) |
-| `let ok = 4 >= 4;` | `let ok = true;` (constant-folded) |
-| `mine double(n) { return n * 2; }` | `function double(n) { return (n * 2); }` |
+| Cubescript                               | Generated JavaScript                         |
+| ---------------------------------------- | -------------------------------------------- |
+| `let x = 2 + 3;`                         | `let x = 5;` (constant-folded)               |
+| `let ok = 4 >= 4;`                       | `let ok = true;` (constant-folded)           |
+| `mine double(n) { return n * 2; }`       | `function double(n) { return (n * 2); }`     |
 | `if (x > 0) { x = 1; } else { x = -1; }` | `if ((x > 0)) { x = 1; } else { x = (-1); }` |
-| `while (i > 0) { i = i - 1; }` | `while ((i > 0)) { i = (i - 1); }` |
+| `while (i > 0) { i = i - 1; }`           | `while ((i > 0)) { i = (i - 1); }`           |
 
 ## Grammar
 
@@ -151,7 +151,7 @@ Ohm spec: [`src/cubescript.ohm`](src/cubescript.ohm)
 npm test
 ```
 
-Uses `c8` over Node's built-in test runner. **139 tests, all passing, 100% branch coverage.**
+Uses `c8` over Node's built-in test runner. **216 tests, all passing, 100% branch coverage.**
 
 ## License
 
