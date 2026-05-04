@@ -19,8 +19,8 @@ test('parse empty program', () => {
   assert.deepStrictEqual(ast, { kind: 'Program', statements: [] });
 });
 
-test('parse let and expression', () => {
-  const ast = parse('let a = 1; a + 2;');
+test('parse place and expression', () => {
+  const ast = parse('place a = 1; a + 2;');
   assert.strictEqual(ast.statements.length, 2);
   assert.strictEqual(ast.statements[0].kind, 'Let');
   assert.strictEqual(ast.statements[0].name, 'a');
@@ -28,18 +28,18 @@ test('parse let and expression', () => {
 });
 
 test('parse multi-character identifier uses idChar iteration', () => {
-  const ast = parse('let count = 0;');
+  const ast = parse('place count = 0;');
   assert.strictEqual(ast.statements[0].name, 'count');
 });
 
 test('parse string literal', () => {
-  const ast = parse('let s = "Hello";');
+  const ast = parse('place s = "Hello";');
   assert.strictEqual(ast.statements[0].init.kind, 'String');
   assert.strictEqual(ast.statements[0].init.value, 'Hello');
 });
 
 test('parse operators and parens', () => {
-  const ast = parse('let x = (1 + 2) * 3;');
+  const ast = parse('place x = (1 + 2) * 3;');
   const init = ast.statements[0].init;
   assert.strictEqual(init.kind, 'Binary');
   assert.strictEqual(init.op, '*');
@@ -55,14 +55,14 @@ test('parse multiplication has higher precedence than addition', () => {
 });
 
 test('parse handles whitespace and newlines around tokens', () => {
-  const ast = parse('let x = 1;\n  \n x + 2;');
+  const ast = parse('place x = 1;\n  \n x + 2;');
   assert.strictEqual(ast.statements.length, 2);
   assert.strictEqual(ast.statements[1].kind, 'ExprStmt');
 });
 
 test('parse reports line and column on multiline syntax error', () => {
   try {
-    parse('let x = 1;\nlet y = ;');
+    parse('place x = 1;\nplace y = ;');
     assert.fail('expected parse to throw');
   } catch (err) {
     assert.ok(err instanceof CubescriptError);
@@ -73,7 +73,7 @@ test('parse reports line and column on multiline syntax error', () => {
 });
 
 test('parse fails with CubescriptError', () => {
-  assert.throws(() => parse('let = 1;'), CubescriptError);
+  assert.throws(() => parse('place = 1;'), CubescriptError);
 });
 
 test('formatError includes line and column when present', () => {

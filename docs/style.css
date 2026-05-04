@@ -254,6 +254,15 @@ code {
   margin-top: 0.25rem;
 }
 
+.example-file {
+  font-family: 'VT323', monospace;
+  font-size: 1.1rem;
+  color: #9ad39a;
+  margin-left: 0.5rem;
+  font-weight: normal;
+  letter-spacing: 0;
+}
+
 /* ── checks table ── */
 table {
   width: 100%;

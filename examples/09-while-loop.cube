@@ -1,5 +1,5 @@
 mine count_down(n) {
-  let i = n;
+  place i = n;
   while (i > 0) {
     i = i - 1;
   }

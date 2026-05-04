@@ -37,7 +37,7 @@
         <h1>Cubescript</h1>
         <p class="sub">Statically checked scripts for the Sponge mod ecosystem.</p>
         <div class="badges">
-          <span class="badge badge-green">216 tests passing</span>
+          <span class="badge badge-green">Examples match repo</span>
           <span class="badge badge-gold">Ohm grammar</span>
           <span class="badge badge-green">Sponge + GraalVM target</span>
           <span class="badge badge-gold">LMU CMSI 3802</span>
@@ -65,8 +65,9 @@
           pipeline.
         </p>
         <p>
-          Under the hood: Ohm parser → typed AST → static analyzer → constant-folding
-          optimizer → JavaScript codegen. The full grammar is in
+          Declarations use the keyword <code>place</code> (not <code>let</code>). Under
+          the hood: Ohm parser → typed AST → static analyzer → constant-folding optimizer
+          → JavaScript codegen. The full grammar is in
           <a
             href="https://github.com/MasonLui/CubeScript/blob/main/src/cubescript.ohm"
             target="_blank"
@@ -91,130 +92,322 @@
         </div>
       </div>
 
-      <!-- examples -->
+      <!-- examples: source and output synced with examples/*.cube and cubescript generate -->
       <div class="card" id="examples">
         <h2>&#9658; Example programs</h2>
+        <p>
+          The Cubescript column is copied from
+          <a href="https://github.com/MasonLui/CubeScript/tree/main/examples" target="_blank" rel="noopener"
+            >examples/*.cube</a
+          >. The JavaScript column is exactly what
+          <code>node src/cubescript.js generate &lt;file&gt;</code> prints today (GraalVM-style
+          output keeps the <code>place</code> keyword for top-level bindings).
+        </p>
 
-        <p class="example-label">1 · Hello, Overworld</p>
+        <p class="example-label">
+          01 · Number literal
+          <a
+            class="example-file"
+            href="https://github.com/MasonLui/CubeScript/blob/main/examples/01-hello.cube"
+            target="_blank"
+            rel="noopener"
+            >01-hello.cube ↗</a
+          >
+        </p>
         <div class="example-grid">
           <div class="col-head">Cubescript</div>
           <div class="col-head right">Generated JavaScript</div>
-          <pre><code>let greeting = "Hello, Overworld!";
+          <pre><code>place diamond_count = 42;</code></pre>
+          <pre class="right"><code>let diamond_count = 42;</code></pre>
+        </div>
+
+        <p class="example-label">
+          02 · Arithmetic &amp; constant folding
+          <a
+            class="example-file"
+            href="https://github.com/MasonLui/CubeScript/blob/main/examples/02-arithmetic.cube"
+            target="_blank"
+            rel="noopener"
+            >02-arithmetic.cube ↗</a
+          >
+        </p>
+        <div class="example-grid">
+          <div class="col-head">Cubescript</div>
+          <div class="col-head right">Generated JavaScript</div>
+          <pre><code>place cobble_stacks = 1 + 2;
+place planks = cobble_stacks * 3;
+planks;</code></pre>
+          <pre class="right"><code>let cobble_stacks = 3;
+let planks = (cobble_stacks * 3);
+planks;</code></pre>
+        </div>
+
+        <p class="example-label">
+          03 · Grouped expressions
+          <a
+            class="example-file"
+            href="https://github.com/MasonLui/CubeScript/blob/main/examples/03-parens.cube"
+            target="_blank"
+            rel="noopener"
+            >03-parens.cube ↗</a
+          >
+        </p>
+        <div class="example-grid">
+          <div class="col-head">Cubescript</div>
+          <div class="col-head right">Generated JavaScript</div>
+          <pre><code>place redstone_signal = (1 + 2) * (3 + 4);</code></pre>
+          <pre class="right"><code>let redstone_signal = 21;</code></pre>
+        </div>
+
+        <p class="example-label">
+          04 · Chained variable use
+          <a
+            class="example-file"
+            href="https://github.com/MasonLui/CubeScript/blob/main/examples/04-chain.cube"
+            target="_blank"
+            rel="noopener"
+            >04-chain.cube ↗</a
+          >
+        </p>
+        <div class="example-grid">
+          <div class="col-head">Cubescript</div>
+          <div class="col-head right">Generated JavaScript</div>
+          <pre><code>place day_count = 10;
+place mobs_spawned = day_count + 1;
+mobs_spawned + mobs_spawned;</code></pre>
+          <pre class="right"><code>let day_count = 10;
+let mobs_spawned = (day_count + 1);
+(mobs_spawned + mobs_spawned);</code></pre>
+        </div>
+
+        <p class="example-label">
+          06 · Hello, Overworld
+          <a
+            class="example-file"
+            href="https://github.com/MasonLui/CubeScript/blob/main/examples/06-hello-world.cube"
+            target="_blank"
+            rel="noopener"
+            >06-hello-world.cube ↗</a
+          >
+        </p>
+        <div class="example-grid">
+          <div class="col-head">Cubescript</div>
+          <div class="col-head right">Generated JavaScript</div>
+          <pre><code>place greeting = "Hello, Overworld!";
 greeting;</code></pre>
           <pre class="right"><code>let greeting = "Hello, Overworld!";
 greeting;</code></pre>
         </div>
 
-        <p class="example-label">2 · Arithmetic &amp; constant folding</p>
+        <p class="example-label">
+          07 · Function declaration &amp; call
+          <a
+            class="example-file"
+            href="https://github.com/MasonLui/CubeScript/blob/main/examples/07-functions.cube"
+            target="_blank"
+            rel="noopener"
+            >07-functions.cube ↗</a
+          >
+        </p>
         <div class="example-grid">
           <div class="col-head">Cubescript</div>
           <div class="col-head right">Generated JavaScript</div>
-          <pre><code>let cobble_stacks = 1 + 2;
-let planks = cobble_stacks * 3;</code></pre>
-          <pre class="right"><code>let cobble_stacks = 3;
-let planks = cobble_stacks * 3;</code></pre>
-        </div>
-
-        <p class="example-label">3 · Grouped expressions</p>
-        <div class="example-grid">
-          <div class="col-head">Cubescript</div>
-          <div class="col-head right">Generated JavaScript</div>
-          <pre><code>let redstone_signal = (1 + 2) * (3 + 4);</code></pre>
-          <pre class="right"><code>let redstone_signal = 21;</code></pre>
-        </div>
-
-        <p class="example-label">4 · Chained variable use</p>
-        <div class="example-grid">
-          <div class="col-head">Cubescript</div>
-          <div class="col-head right">Generated JavaScript</div>
-          <pre><code>let day_count = 10;
-let mobs_spawned = day_count + 1;
-mobs_spawned + mobs_spawned;</code></pre>
-          <pre class="right"><code>let day_count = 10;
-let mobs_spawned = day_count + 1;
-mobs_spawned + mobs_spawned;</code></pre>
-        </div>
-
-        <p class="example-label">5 · Function declaration &amp; call</p>
-        <div class="example-grid">
-          <div class="col-head">Cubescript</div>
-          <div class="col-head right">Generated JavaScript</div>
-          <pre><code>mine double(n) {
-  return n * 2;
+          <pre><code>mine greet(name) {
+  return "Hello, " + name;
 }
-let result = double(5);
-result;</code></pre>
-          <pre class="right"><code>function double(n) {
-  return (n * 2);
+
+place msg = greet("Steve");
+msg;</code></pre>
+          <pre class="right"><code>function greet(name) {
+  return ("Hello, " + name);
 }
-let result = double(5);
-result;</code></pre>
+let msg = greet("Steve");
+msg;</code></pre>
         </div>
 
-        <p class="example-label">6 · If / else conditional</p>
+        <p class="example-label">
+          08 · Nested conditionals
+          <a
+            class="example-file"
+            href="https://github.com/MasonLui/CubeScript/blob/main/examples/08-conditionals.cube"
+            target="_blank"
+            rel="noopener"
+            >08-conditionals.cube ↗</a
+          >
+        </p>
         <div class="example-grid">
           <div class="col-head">Cubescript</div>
           <div class="col-head right">Generated JavaScript</div>
-          <pre><code>mine is_day(hour) {
+          <pre><code>mine is_daytime(hour) {
   if (hour >= 6) {
-    return true;
-  } else {
-    return false;
+    if (hour <= 18) {
+      return true;
+    }
   }
-}</code></pre>
-          <pre class="right"><code>function is_day(hour) {
+  return false;
+}
+
+place daytime = is_daytime(12);
+daytime;</code></pre>
+          <pre class="right"><code>function is_daytime(hour) {
   if ((hour >= 6)) {
-    return true;
-  } else {
-    return false;
+    if ((hour <= 18)) {
+      return true;
+    }
   }
-}</code></pre>
+  return false;
+}
+let daytime = is_daytime(12);
+daytime;</code></pre>
         </div>
 
-        <p class="example-label">7 · While loop with break</p>
+        <p class="example-label">
+          09 · While loop (inside <code>mine</code>)
+          <a
+            class="example-file"
+            href="https://github.com/MasonLui/CubeScript/blob/main/examples/09-while-loop.cube"
+            target="_blank"
+            rel="noopener"
+            >09-while-loop.cube ↗</a
+          >
+        </p>
         <div class="example-grid">
           <div class="col-head">Cubescript</div>
           <div class="col-head right">Generated JavaScript</div>
-          <pre><code>let i = 10;
-while (i > 0) {
-  i = i - 1;
+          <pre><code>mine count_down(n) {
+  place i = n;
+  while (i > 0) {
+    i = i - 1;
+  }
+  return i;
 }
-i;</code></pre>
-          <pre class="right"><code>let i = 10;
-while ((i > 0)) {
-  i = (i - 1);
+
+place result = count_down(5);
+result;</code></pre>
+          <pre class="right"><code>function count_down(n) {
+  let i = n;
+  while ((i > 0)) {
+    i = (i - 1);
+  }
+  return i;
 }
-i;</code></pre>
+let result = count_down(5);
+result;</code></pre>
         </div>
 
-        <p class="example-label">8 · Booleans &amp; logic</p>
+        <p class="example-label">
+          10 · Booleans &amp; logic
+          <a
+            class="example-file"
+            href="https://github.com/MasonLui/CubeScript/blob/main/examples/10-booleans.cube"
+            target="_blank"
+            rel="noopener"
+            >10-booleans.cube ↗</a
+          >
+        </p>
         <div class="example-grid">
           <div class="col-head">Cubescript</div>
-          <div class="col-head right">Generated JavaScript (optimized)</div>
-          <pre><code>let has_sword = true;
-let has_shield = false;
-let ready = has_sword &amp;&amp; !has_shield;</code></pre>
+          <div class="col-head right">Generated JavaScript</div>
+          <pre><code>place has_sword = true;
+place has_shield = false;
+place is_ready = has_sword &amp;&amp; !has_shield;
+is_ready;</code></pre>
           <pre class="right"><code>let has_sword = true;
 let has_shield = false;
-let ready = (has_sword &amp;&amp; (!false));</code></pre>
+let is_ready = (has_sword &amp;&amp; (!has_shield));
+is_ready;</code></pre>
         </div>
 
-        <p class="example-label">9 · Static error — undefined identifier</p>
+        <p class="example-label">
+          11 · Comparisons
+          <a
+            class="example-file"
+            href="https://github.com/MasonLui/CubeScript/blob/main/examples/11-comparisons.cube"
+            target="_blank"
+            rel="noopener"
+            >11-comparisons.cube ↗</a
+          >
+        </p>
+        <div class="example-grid">
+          <div class="col-head">Cubescript</div>
+          <div class="col-head right">Generated JavaScript</div>
+          <pre><code>mine max(a, b) {
+  if (a >= b) {
+    return a;
+  }
+  return b;
+}
+
+place highest = max(10, 42);
+highest;</code></pre>
+          <pre class="right"><code>function max(a, b) {
+  if ((a >= b)) {
+    return a;
+  }
+  return b;
+}
+let highest = max(10, 42);
+highest;</code></pre>
+        </div>
+
+        <p class="example-label">
+          12 · Mod recipe (nested calls)
+          <a
+            class="example-file"
+            href="https://github.com/MasonLui/CubeScript/blob/main/examples/12-mod-recipe.cube"
+            target="_blank"
+            rel="noopener"
+            >12-mod-recipe.cube ↗</a
+          >
+        </p>
+        <div class="example-grid">
+          <div class="col-head">Cubescript</div>
+          <div class="col-head right">Generated JavaScript</div>
+          <pre><code>mine craft_planks(log_count) {
+  return log_count * 4;
+}
+
+mine craft_sticks(plank_count) {
+  return plank_count / 2;
+}
+
+mine can_craft_pickaxe(logs) {
+  place planks = craft_planks(logs);
+  place sticks = craft_sticks(planks);
+  return planks >= 3 &amp;&amp; sticks >= 2;
+}
+
+place enough = can_craft_pickaxe(2);
+enough;</code></pre>
+          <pre class="right"><code>function craft_planks(log_count) {
+  return (log_count * 4);
+}
+function craft_sticks(plank_count) {
+  return (plank_count / 2);
+}
+function can_craft_pickaxe(logs) {
+  let planks = craft_planks(logs);
+  let sticks = craft_sticks(planks);
+  return ((planks >= 3) &amp;&amp; (sticks >= 2));
+}
+let enough = can_craft_pickaxe(2);
+enough;</code></pre>
+        </div>
+
+        <p class="example-label">13 · Static error — undefined identifier</p>
         <div class="example-grid">
           <div class="col-head">Cubescript (compile-time error ✗)</div>
           <div class="col-head right">Compiler output</div>
           <pre><code>diamond_pick;</code></pre>
-          <pre class="right"><code>CubescriptError: Undefined identifier
-'diamond_pick'</code></pre>
+          <pre class="right"><code>CubescriptError: Undefined identifier 'diamond_pick'</code></pre>
         </div>
 
-        <p class="example-label">10 · Static error — return outside function</p>
+        <p class="example-label">14 · Static error — return outside function</p>
         <div class="example-grid">
           <div class="col-head">Cubescript (compile-time error ✗)</div>
           <div class="col-head right">Compiler output</div>
           <pre><code>return 42;</code></pre>
-          <pre class="right"><code>CubescriptError: Return statement
-outside of a function</code></pre>
+          <pre class="right"><code>CubescriptError: Return statement outside of a function</code></pre>
         </div>
       </div>
 

@@ -23,28 +23,28 @@ function runCli(args) {
 }
 
 test('compile full pipeline', () => {
-  const { code, ast } = compile('let n = 1 + 2; n;');
+  const { code, ast } = compile('place n = 1 + 2; n;');
   assert.ok(ast.optimized);
   assert.ok(code.includes('let n = 3'));
 });
 
 test('compile without optimization', () => {
-  const { code } = compile('let n = 1 + 2;', { optimize: false });
+  const { code } = compile('place n = 1 + 2;', { optimize: false });
   assert.ok(code.includes('let n = (1 + 2)'));
 });
 
 test('stages.parse', () => {
-  const ast = stages.parse('let x = 1;');
+  const ast = stages.parse('place x = 1;');
   assert.strictEqual(ast.statements[0].name, 'x');
 });
 
 test('stages.generate returns string', () => {
-  const js = stages.generate('let x = 1; x;');
+  const js = stages.generate('place x = 1; x;');
   assert.ok(typeof js === 'string' && js.includes('let x'));
 });
 
 test('stages.optimize marks ast as analyzed and optimized', () => {
-  const ast = stages.optimize('let x = 1 + 1; x;');
+  const ast = stages.optimize('place x = 1 + 1; x;');
   assert.strictEqual(ast.analyzed, true);
   assert.strictEqual(ast.optimized, true);
 });
@@ -52,7 +52,7 @@ test('stages.optimize marks ast as analyzed and optimized', () => {
 test('CLI syntax ok', () => {
   const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
   const f = join(dir, 't.cube');
-  writeFileSync(f, 'let a = 1;');
+  writeFileSync(f, 'place a = 1;');
   const r = runCli(['syntax', f]);
   assert.strictEqual(r.status, 0, r.stderr);
   assert.ok(r.stdout.includes('syntax ok'));
@@ -72,7 +72,7 @@ test('CLI analyze fails on undefined', () => {
 test('CLI generate prints JS', () => {
   const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
   const f = join(dir, 't.cube');
-  writeFileSync(f, 'let b = 2;');
+  writeFileSync(f, 'place b = 2;');
   const r = runCli(['generate', f]);
   assert.strictEqual(r.status, 0, r.stderr);
   assert.ok(r.stdout.includes('let b'));
@@ -82,7 +82,7 @@ test('CLI generate prints JS', () => {
 test('CLI parse fails on invalid syntax', () => {
   const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
   const f = join(dir, 't.cube');
-  writeFileSync(f, 'let = 9;');
+  writeFileSync(f, 'place = 9;');
   const r = runCli(['parse', f]);
   assert.strictEqual(r.status, 1);
   assert.ok(r.stderr.includes('CubescriptError'));
@@ -92,7 +92,7 @@ test('CLI parse fails on invalid syntax', () => {
 test('CLI optimize output includes optimized marker', () => {
   const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
   const f = join(dir, 't.cube');
-  writeFileSync(f, 'let a = 1 + 2;');
+  writeFileSync(f, 'place a = 1 + 2;');
   const r = runCli(['optimize', f]);
   assert.strictEqual(r.status, 0, r.stderr);
   assert.ok(r.stdout.includes('"optimized": true'));
