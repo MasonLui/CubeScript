@@ -155,4 +155,4 @@ Uses `c8` over Node's built-in test runner. Current baseline: **118 tests, all p
 
 ## License
 
-MIT — see `LICENSE`.
+MIT — see `LICENSE`
