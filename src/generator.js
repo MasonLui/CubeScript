@@ -28,7 +28,7 @@ function genStmt(stmt, indent = '') {
   const i2 = indent + '  ';
   switch (stmt.kind) {
     case 'Let':
-      return `${i}place ${stmt.name} = ${genExpr(stmt.init)};`;
+      return `${i}let ${stmt.name} = ${genExpr(stmt.init)};`;
     case 'Assign':
       return `${i}${stmt.name} = ${genExpr(stmt.value)};`;
     case 'ExprStmt':
