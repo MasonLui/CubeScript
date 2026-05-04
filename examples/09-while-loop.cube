@@ -6,5 +6,5 @@ mine count_down(n) {
   return i;
 }
 
-let result = count_down(5);
+place result = count_down(5);
 result;

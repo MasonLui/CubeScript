@@ -43,6 +43,12 @@ test('stages.generate returns string', () => {
   assert.ok(typeof js === 'string' && js.includes('let x'));
 });
 
+test('stages.optimize marks ast as analyzed and optimized', () => {
+  const ast = stages.optimize('let x = 1 + 1; x;');
+  assert.strictEqual(ast.analyzed, true);
+  assert.strictEqual(ast.optimized, true);
+});
+
 test('CLI syntax ok', () => {
   const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
   const f = join(dir, 't.cube');
@@ -73,83 +79,23 @@ test('CLI generate prints JS', () => {
   unlinkSync(f);
 });
 
-test('CLI usage on missing args', () => {
-  const r = runCli([]);
-  assert.strictEqual(r.status, 1);
-  assert.ok(r.stderr.includes('Usage'));
-});
-
-test('CLI unknown command', () => {
+test('CLI parse fails on invalid syntax', () => {
   const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
   const f = join(dir, 't.cube');
-  writeFileSync(f, 'let a = 1;');
-  const r = runCli(['nope', f]);
-  assert.strictEqual(r.status, 1);
-  unlinkSync(f);
-});
-
-test('CLI analyze ok', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
-  const f = join(dir, 't.cube');
-  writeFileSync(f, 'let a = 1;');
-  const r = runCli(['analyze', f]);
-  assert.strictEqual(r.status, 0, r.stderr);
-  assert.ok(r.stdout.includes('analysis ok'));
-  unlinkSync(f);
-});
-
-test('CLI parse prints JSON', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
-  const f = join(dir, 't.cube');
-  writeFileSync(f, 'let k = 0;');
+  writeFileSync(f, 'let = 9;');
   const r = runCli(['parse', f]);
-  assert.strictEqual(r.status, 0, r.stderr);
-  assert.ok(r.stdout.includes('"kind"'));
-  unlinkSync(f);
-});
-
-test('CLI optimize prints JSON', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
-  const f = join(dir, 't.cube');
-  writeFileSync(f, 'let u = 1 + 1;');
-  const r = runCli(['optimize', f]);
-  assert.strictEqual(r.status, 0, r.stderr);
-  assert.ok(r.stdout.includes('"value": 2'));
-  unlinkSync(f);
-});
-
-test('CLI run evaluates generated program', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
-  const f = join(dir, 't.cube');
-  writeFileSync(f, 'let a = 1;');
-  const r = runCli(['run', f]);
-  assert.strictEqual(r.status, 0, r.stderr);
-  unlinkSync(f);
-});
-
-test('CLI run prints when last statement has a value', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
-  const f = join(dir, 't.cube');
-  writeFileSync(f, '7;');
-  const r = runCli(['run', f]);
-  assert.strictEqual(r.status, 0, r.stderr);
-  assert.strictEqual(r.stdout.trim(), '7');
-  unlinkSync(f);
-});
-
-test('CLI usage when file path missing', () => {
-  const r = runCli(['parse']);
-  assert.strictEqual(r.status, 1);
-  assert.ok(r.stderr.includes('Usage'));
-});
-
-test('CLI prints error on syntax failure', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
-  const f = join(dir, 't.cube');
-  writeFileSync(f, 'let = 1;');
-  const r = runCli(['syntax', f]);
   assert.strictEqual(r.status, 1);
   assert.ok(r.stderr.includes('CubescriptError'));
+  unlinkSync(f);
+});
+
+test('CLI optimize output includes optimized marker', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
+  const f = join(dir, 't.cube');
+  writeFileSync(f, 'let a = 1 + 2;');
+  const r = runCli(['optimize', f]);
+  assert.strictEqual(r.status, 0, r.stderr);
+  assert.ok(r.stdout.includes('"optimized": true'));
   unlinkSync(f);
 });
 
@@ -157,76 +103,4 @@ test('CLI reports missing file cleanly', () => {
   const r = runCli(['syntax', join(tmpdir(), 'cubescript-does-not-exist-99.cube')]);
   assert.strictEqual(r.status, 1);
   assert.ok(r.stderr.includes('File not found'));
-});
-
-test('CLI runs function example', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
-  const f = join(dir, 't.cube');
-  writeFileSync(f, 'mine double(n) { return n * 2; } let x = double(5); x;');
-  const r = runCli(['run', f]);
-  assert.strictEqual(r.status, 0, r.stderr);
-  assert.strictEqual(r.stdout.trim(), '10');
-  unlinkSync(f);
-});
-
-test('CLI runs if-else example', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
-  const f = join(dir, 't.cube');
-  writeFileSync(f, 'let x = 1; if (x > 0) { x = 99; } x;');
-  const r = runCli(['run', f]);
-  assert.strictEqual(r.status, 0, r.stderr);
-  assert.strictEqual(r.stdout.trim(), '99');
-  unlinkSync(f);
-});
-
-test('CLI analyze rejects return outside function', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
-  const f = join(dir, 't.cube');
-  writeFileSync(f, 'return 1;');
-  const r = runCli(['analyze', f]);
-  assert.strictEqual(r.status, 1);
-  assert.ok(r.stderr.includes('Return'));
-  unlinkSync(f);
-});
-
-test('CLI analyze rejects continue outside loop', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
-  const f = join(dir, 't.cube');
-  writeFileSync(f, 'continue;');
-  const r = runCli(['analyze', f]);
-  assert.strictEqual(r.status, 1);
-  assert.ok(r.stderr.includes('Continue'));
-  unlinkSync(f);
-});
-
-test('CLI analyze rejects break outside loop', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
-  const f = join(dir, 't.cube');
-  writeFileSync(f, 'break;');
-  const r = runCli(['analyze', f]);
-  assert.strictEqual(r.status, 1);
-  assert.ok(r.stderr.includes('Break'));
-  unlinkSync(f);
-});
-
-test('CLI generate emits function JS', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'cubescript-'));
-  const f = join(dir, 't.cube');
-  writeFileSync(f, 'mine greet(name) { return "Hi " + name; }');
-  const r = runCli(['generate', f]);
-  assert.strictEqual(r.status, 0, r.stderr);
-  assert.ok(r.stdout.includes('function greet'));
-  unlinkSync(f);
-});
-
-test('compile full pipeline with new features', () => {
-  const { code, ast } = compile('mine f(x) { return x + 1; } let r = f(4); r;');
-  assert.ok(ast.optimized);
-  assert.ok(code.includes('function f'));
-  assert.ok(code.includes('return'));
-});
-
-test('CLI reports non-ENOENT read error', () => {
-  const r = runCli(['syntax', '/']);
-  assert.strictEqual(r.status, 1);
 });

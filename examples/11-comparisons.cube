@@ -5,5 +5,5 @@ mine max(a, b) {
   return b;
 }
 
-let highest = max(10, 42);
+place highest = max(10, 42);
 highest;

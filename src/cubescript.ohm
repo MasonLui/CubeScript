@@ -59,7 +59,7 @@ Cubescript {
   stringChar = ~("\"" | "\n") any
   number    = digit+
 
-  letKeyword      = "let"      ~idChar
+  letKeyword      = "place"      ~idChar
   mineKeyword     = "mine"     ~idChar
   ifKeyword       = "if"       ~idChar
   elseKeyword     = "else"     ~idChar

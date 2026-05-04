@@ -1,2 +1,3 @@
-let cobble_stacks = 1 + 2;
-let planks = cobble_stacks * 3;
+place cobble_stacks = 1 + 2;
+place planks = cobble_stacks * 3;
+planks;

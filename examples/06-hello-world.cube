@@ -1,2 +1,2 @@
-let greeting = "Hello, Overworld!";
+place greeting = "Hello, Overworld!";
 greeting;
